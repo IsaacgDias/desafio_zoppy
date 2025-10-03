@@ -1,0 +1,33 @@
+<h2>{{ isEditMode ? 'Editar Produto' : 'Cadastrar Produto' }}</h2>
+
+<form [formGroup]="produtoForm" (ngSubmit)="salvar()">
+  <label>
+    Nome:
+    <input type="text" formControlName="nome" />
+  </label>
+  <br/>
+
+  <label>
+    Descrição:
+    <textarea formControlName="descricao"></textarea>
+  </label>
+  <br/>
+
+  <label>
+    Preço:
+    <input type="number" formControlName="preco" />
+  </label>
+  <br/>
+
+  <label>
+    Estoque:
+    <input type="number" formControlName="estoque" />
+  </label>
+  <br/>
+
+  <button type="submit">{{ isEditMode ? 'Atualizar' : 'Salvar' }}</button>
+  <button type="button" (click)="cancelar()">Cancelar</button>
+</form>
+
+<p *ngIf="mensagemSucesso" style="color: green">{{ mensagemSucesso }}</p>
+<p *ngIf="mensagemErro" style="color: red">{{ mensagemErro }}</p>

@@ -3,6 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ProdutosModule } from './modules/produtos/produtos.module';
 import { Produto } from './modules/produtos/models/produtos.model';
 
+// Configuração do banco de dados
 @Module({
   imports: [
     SequelizeModule.forRoot({

@@ -1,20 +1,40 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProdutosService, Produto } from '../../services/produtos.service';
+import { CommonModule } from '@angular/common';
 
-// Componente que exibe a lista de produtos utilizando ProdutosService
 @Component({
   selector: 'app-lista-produtos',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './lista-produtos.component.html',
-  styleUrl: './lista-produtos.component.css'
+  styleUrls: ['./lista-produtos.component.css']
 })
 export class ListaProdutosComponent implements OnInit {
-  produto: Produto[] = [];
+  produtos: Produto[] = [];
 
-  constructor(private produtosService: ProdutosService) {}
+  constructor(
+    private produtosService: ProdutosService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
-    this.produto = await this.produtosService.obeterProdutos();
+    this.produtos = await this.produtosService.obterProdutos();
   }
-  
+
+  novoProduto() {
+    this.router.navigate(['/produtos/novo']);
+  }
+
+  editarProduto(id: number) {
+    this.router.navigate([`/produtos/editar/${id}`]);
+  }
+
+  async deletarProduto(id: number) {
+    if (confirm('Tem certeza que deseja deletar este produto?')) {
+      await this.produtosService.deletarProduto(id);
+      // Atualiza a lista local removendo o produto deletado
+      this.produtos = this.produtos.filter(p => p.id !== id);
+    }
+  }
 }

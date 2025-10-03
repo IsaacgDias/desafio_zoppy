@@ -1,4 +1,7 @@
 <h2>Produtos</h2>
+
+<button (click)="novoProduto()">Novo Produto</button>
+
 <table border="1">
   <thead>
     <tr>
@@ -7,6 +10,7 @@
       <th>Descrição</th>
       <th>Preço</th>
       <th>Estoque</th>
+      <th>Ações</th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +20,12 @@
       <td>{{ produto.descricao }}</td>
       <td>{{ produto.preco }}</td>
       <td>{{ produto.estoque }}</td>
+      <td>
+        <button (click)="editarProduto(produto.id!)">Editar</button>
+      </td>
+      <td>
+        <button (click)="deletarProduto(produto.id!)">Deletar</button>
+      </td>
     </tr>
   </tbody>
 </table>
