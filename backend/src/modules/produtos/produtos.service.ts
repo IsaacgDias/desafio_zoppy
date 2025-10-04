@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Produto } from './models/produtos.model';
+import { Produto } from '../../models/produtos.model';
 import { Model } from 'sequelize-typescript';
 
 // Serviço responsável pelas operações CRUD da entidade Produto

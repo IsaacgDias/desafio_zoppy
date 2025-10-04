@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
-import { Produto } from './models/produtos.model';
+import { Produto } from '../../models/produtos.model';
 
 // Controller responsável pelas rotas CRUD da entidade Produto
 @Controller('produtos')

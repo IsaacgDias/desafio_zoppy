@@ -1,9 +1,6 @@
-<h2>Produtos</h2>
+<h2>Vincular produto ao cliente: {{ cliente?.nome }}</h2>
 
-<button (click)="novoProduto()">Novo Produto</button>
-<button (click)="irParaClientes()">Lista de Clientes</button> <!-- botão novo -->
-
-<table border="1">
+<table border="1" width="100%">
   <thead>
     <tr>
       <th>ID</th>
@@ -12,7 +9,6 @@
       <th>Preço</th>
       <th>Estoque</th>
       <th>Ações</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -23,10 +19,11 @@
       <td>{{ produto.preco }}</td>
       <td>{{ produto.estoque }}</td>
       <td>
-        <button (click)="editarProduto(produto.id!)">Editar</button>
-        <button (click)="deletarProduto(produto.id!)">Deletar</button>
+        <button (click)="vincularProduto(produto.id!)">Selecionar</button>
       </td>
     </tr>
-
   </tbody>
 </table>
+
+<br/>
+<button (click)="cancelar()">Cancelar</button>

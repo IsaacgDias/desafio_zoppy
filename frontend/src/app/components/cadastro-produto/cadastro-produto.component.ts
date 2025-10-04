@@ -38,22 +38,26 @@ export class CadastroProdutoComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    // Verifica se há um ID na rota para modo edição
+  ngOnInit() {
     this.produtoId = Number(this.route.snapshot.paramMap.get('id'));
     this.isEditMode = !!this.produtoId;
 
     if (this.produtoId) {
-      try {
-        const produto = await this.produtosService.obterProdutoPorId(this.produtoId);
-        if (produto) this.produtoForm.patchValue(produto);
-      } catch (error) {
-        this.mensagemErro = 'Erro ao carregar produto.';
-      }
+      this.produtosService.obterProdutoPorId(this.produtoId)
+        .subscribe({
+          next: (produto) => {
+            if (produto) {
+              this.produtoForm.patchValue(produto); // preenche o formulário
+            }
+          },
+          error: () => {
+            this.mensagemErro = 'Erro ao carregar produto.';
+          }
+        });
     }
   }
 
-  async salvar() {
+  salvar() {
     if (this.produtoForm.invalid) {
       this.mensagemErro = 'Preencha todos os campos obrigatórios corretamente.';
       return;
@@ -61,19 +65,32 @@ export class CadastroProdutoComponent implements OnInit {
 
     const dados: Produto = this.produtoForm.value;
 
-    try {
-      if (this.produtoId) {
-        await this.produtosService.atualizarProduto(this.produtoId, dados);
-        this.mensagemSucesso = 'Produto atualizado com sucesso!';
-      } else {
-        await this.produtosService.criarProduto(dados);
-        this.mensagemSucesso = 'Produto criado com sucesso!';
-        this.produtoForm.reset();
-      }
-    } catch (error) {
-      this.mensagemErro = 'Erro ao salvar o produto.';
+    if (this.produtoId) {
+      this.produtosService.atualizarProduto(this.produtoId, dados)
+        .subscribe({
+          next: () => {
+            this.mensagemSucesso = 'Produto atualizado com sucesso!';
+            this.router.navigate(['/produtos']);
+          },
+          error: () => {
+            this.mensagemErro = 'Erro ao salvar o produto.';
+          }
+        });
+    } else {
+      this.produtosService.criarProduto(dados)
+        .subscribe({
+          next: () => {
+            this.mensagemSucesso = 'Produto criado com sucesso!';
+            this.produtoForm.reset();
+            this.router.navigate(['/produtos']);
+          },
+          error: () => {
+            this.mensagemErro = 'Erro ao salvar o produto.';
+          }
+        });
     }
   }
+
 
   // Redireciona de volta para a listagem de produtos
   cancelar() {

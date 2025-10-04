@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ProdutosService, Produto } from '../../services/produtos.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -11,15 +12,19 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./lista-produtos.component.css']
 })
 export class ListaProdutosComponent implements OnInit {
-  produtos: Produto[] = [];
+  produtos$!: Observable<Produto[]>; 
 
   constructor(
     private produtosService: ProdutosService,
     private router: Router
   ) {}
 
-  async ngOnInit() {
-    this.produtos = await this.produtosService.obterProdutos();
+  ngOnInit() {
+    this.carregarProdutos();
+  }
+
+  carregarProdutos() {
+    this.produtos$ = this.produtosService.obterProdutos();
   }
 
   novoProduto() {
@@ -30,11 +35,15 @@ export class ListaProdutosComponent implements OnInit {
     this.router.navigate([`/produtos/editar/${id}`]);
   }
 
-  async deletarProduto(id: number) {
+  deletarProduto(id: number) {
     if (confirm('Tem certeza que deseja deletar este produto?')) {
-      await this.produtosService.deletarProduto(id);
-      // Atualiza a lista local removendo o produto deletado
-      this.produtos = this.produtos.filter(p => p.id !== id);
+      this.produtosService.deletarProduto(id).subscribe(() => {
+        this.carregarProdutos();
+      });
     }
+  }
+
+  irParaClientes() {
+    this.router.navigate(['/clientes']);
   }
 }

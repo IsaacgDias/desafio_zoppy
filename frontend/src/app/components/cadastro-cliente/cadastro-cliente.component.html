@@ -1,0 +1,22 @@
+<h2>{{ isEditMode ? 'Editar Cliente' : 'Cadastrar Cliente' }}</h2>
+
+<form [formGroup]="clienteForm" (ngSubmit)="salvar()">
+  <label>
+    Nome:
+    <input type="text" formControlName="nome" />
+  </label>
+  <br/>
+  
+  <label>
+    Email:
+    <input type="email" formControlName="email" />
+  </label>
+  <br/>
+
+  <button type="submit">{{ isEditMode ? 'Atualizar' : 'Salvar' }}</button>
+  <button type="button" (click)="cancelar()">Cancelar</button>
+
+  <div *ngIf="mensagemSucesso" class="success">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="error">{{ mensagemErro }}</div>
+
+</form>

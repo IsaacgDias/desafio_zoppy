@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import axios from 'axios';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-// Interface do Produto
 export interface Produto {
   id?: number;
   nome: string;
@@ -16,34 +16,25 @@ export interface Produto {
 export class ProdutosService {
   private apiUrl = 'http://localhost:3000/produtos';
 
-  // Buscar todos os produtos
-  async obterProdutos(): Promise<Produto[]> {
-    const response = await axios.get(this.apiUrl);
-    return response.data;
+  constructor(private http: HttpClient) {}
+
+  obterProdutos(): Observable<Produto[]> {
+    return this.http.get<Produto[]>(this.apiUrl);
   }
 
-  async obterProdutoPorId(id: number): Promise<Produto> {
-    const response = await axios.get(`${this.apiUrl}/${id}`);
-    return response.data;
+  obterProdutoPorId(id: number): Observable<Produto> {
+    return this.http.get<Produto>(`${this.apiUrl}/${id}`);
   }
 
-
-  // Criar produto
-  async criarProduto(produto: Produto): Promise<Produto> {
-    const response = await axios.post(this.apiUrl, produto);
-    return response.data;
+  criarProduto(produto: Produto): Observable<Produto> {
+    return this.http.post<Produto>(this.apiUrl, produto);
   }
 
-  // Atualizar produto
-  async atualizarProduto(id: number, produto: Produto): Promise<Produto> {
-    const response = await axios.put(`${this.apiUrl}/${id}`, produto);
-    return response.data;
+  atualizarProduto(id: number, produto: Produto): Observable<Produto> {
+    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto);
   }
 
-  // Deletar produto
-  async deletarProduto(id: number): Promise<void> {
-    await axios.delete(`${this.apiUrl}/${id}`);
+  deletarProduto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-  
 }

@@ -1,0 +1,34 @@
+<h2>Clientes</h2>
+
+<button (click)="novoCliente()">Novo Cliente</button>
+<button (click)="voltarListaProduto()">Voltar</button>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Produtos</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cliente of clientes$ | async">
+      <td>{{ cliente.id }}</td>
+      <td>{{ cliente.nome }}</td>
+      <td>{{ cliente.email }}</td>
+      <td>
+        <span *ngFor="let produto of cliente.produtos ?? []; let i = index">
+        {{ produto.nome }}
+        <span *ngIf="i < (cliente.produtos?.length ?? 0) - 1">, </span>
+        </span>
+      </td>
+      <td>
+        <button (click)="editarCliente(cliente.id!)">Editar</button>
+        <button (click)="deletarCliente(cliente.id!)">Deletar</button>
+        <button (click)="abrirVincularProduto(cliente.id!)">Vincular Produto</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
