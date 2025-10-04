@@ -21,9 +21,26 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: desafio_zoppy
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '4200:4200'
+    volumes:
+      - ./frontend:/app        
+      - /app/node_modules      
+    command: npm run start -- --host 0.0.0.0 --poll=2000
+    depends_on:
+      - backend
 
 volumes:
   mysql-data:
