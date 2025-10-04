@@ -1,34 +1,82 @@
-<h2>Clientes</h2>
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+  <div class="w-full max-w-5xl bg-white rounded-lg shadow-md p-6">
 
-<button (click)="novoCliente()">Novo Cliente</button>
-<button (click)="voltarListaProduto()">Voltar</button>
+    <!-- Título -->
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Clientes</h2>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Email</th>
-      <th>Produtos</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let cliente of clientes$ | async">
-      <td>{{ cliente.id }}</td>
-      <td>{{ cliente.nome }}</td>
-      <td>{{ cliente.email }}</td>
-      <td>
-        <span *ngFor="let produto of cliente.produtos ?? []; let i = index">
-        {{ produto.nome }}
-        <span *ngIf="i < (cliente.produtos?.length ?? 0) - 1">, </span>
-        </span>
-      </td>
-      <td>
-        <button (click)="editarCliente(cliente.id!)">Editar</button>
-        <button (click)="deletarCliente(cliente.id!)">Deletar</button>
-        <button (click)="abrirVincularProduto(cliente.id!)">Vincular Produto</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <!-- Filtro + Botões -->
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+      <input
+        type="text"
+        placeholder="Filtrar clientes..."
+        class="w-full sm:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition"
+      />
+
+      <div class="flex gap-2 justify-center sm:justify-end">
+        <button
+          (click)="novoCliente()"
+          class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Novo Cliente
+        </button>
+        <button
+          (click)="voltarListaProduto()"
+          class="text-white bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Voltar
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabela responsiva -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 text-left">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-2 px-4 text-sm font-medium text-gray-700 border-b">ID</th>
+            <th class="py-2 px-4 text-sm font-medium text-gray-700 border-b">Nome</th>
+            <th class="py-2 px-4 text-sm font-medium text-gray-700 border-b">Email</th>
+            <th class="py-2 px-4 text-sm font-medium text-gray-700 border-b">Produtos</th>
+            <th class="py-2 px-4 text-sm font-medium text-gray-700 border-b">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-100">
+          <tr *ngFor="let cliente of clientes$ | async" class="hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-600">{{ cliente.id }}</td>
+            <td class="py-3 px-4 text-sm text-gray-600">{{ cliente.nome }}</td>
+            <td class="py-3 px-4 text-sm text-gray-600">{{ cliente.email }}</td>
+            <td class="py-3 px-4 text-sm text-gray-600">
+              <span *ngFor="let produto of cliente.produtos ?? []; let i = index">
+                {{ produto.nome }}<span *ngIf="i < (cliente.produtos?.length ?? 0) - 1">, </span>
+              </span>
+            </td>
+
+            <td class="py-3 px-4 text-sm text-gray-600">
+              <div class="flex flex-col sm:flex-row gap-2">
+                <button
+                  (click)="editarCliente(cliente.id!)"
+                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="deletarCliente(cliente.id!)"
+                  class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                >
+                  Deletar
+                </button>
+                <button
+                  (click)="abrirVincularProduto(cliente.id!)"
+                  class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
+                >
+                  Vincular Produto
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

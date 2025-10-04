@@ -1,29 +1,50 @@
-<h2>Vincular produto ao cliente: {{ cliente?.nome }}</h2>
+<div class="max-w-6xl mx-auto p-6 bg-gray-50 rounded-2xl shadow-md">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    Vincular produto ao cliente: 
+    <span class="text-indigo-600">{{ cliente?.nome }}</span>
+  </h2>
 
-<table border="1" width="100%">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>Preço</th>
-      <th>Estoque</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let produto of produtos$ | async">
-      <td>{{ produto.id }}</td>
-      <td>{{ produto.nome }}</td>
-      <td>{{ produto.descricao }}</td>
-      <td>{{ produto.preco }}</td>
-      <td>{{ produto.estoque }}</td>
-      <td>
-        <button (click)="vincularProduto(produto.id!)">Selecionar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <div class="overflow-x-auto bg-white rounded-xl shadow-sm">
+    <table class="min-w-full border border-gray-200">
+      <thead class="bg-gray-500 text-white">
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Nome</th>
+          <th class="px-4 py-2 text-left">Descrição</th>
+          <th class="px-4 py-2 text-left">Preço</th>
+          <th class="px-4 py-2 text-left">Estoque</th>
+          <th class="px-4 py-2 text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let produto of produtos$ | async"
+          class="border-b hover:bg-gray-100 transition"
+        >
+          <td class="px-4 py-2">{{ produto.id }}</td>
+          <td class="px-4 py-2 font-medium text-gray-800">{{ produto.nome }}</td>
+          <td class="px-4 py-2 text-gray-600">{{ produto.descricao }}</td>
+          <td class="px-4 py-2 text-gray-700">R$ {{ produto.preco }}</td>
+          <td class="px-4 py-2">{{ produto.estoque }}</td>
+          <td class="px-4 py-2 text-center">
+            <button
+              (click)="vincularProduto(produto.id!)"
+              class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition"
+            >
+              Selecionar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<br/>
-<button (click)="cancelar()">Cancelar</button>
+  <div class="mt-6 text-right">
+    <button
+      (click)="cancelar()"
+      class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+    >
+      Cancelar
+    </button>
+  </div>
+</div>

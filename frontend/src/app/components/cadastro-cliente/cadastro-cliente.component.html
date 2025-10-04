@@ -1,22 +1,55 @@
-<h2>{{ isEditMode ? 'Editar Cliente' : 'Cadastrar Cliente' }}</h2>
+<div class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">
+      {{ isEditMode ? 'Editar Cliente' : 'Cadastrar Cliente' }}
+    </h2>
 
-<form [formGroup]="clienteForm" (ngSubmit)="salvar()">
-  <label>
-    Nome:
-    <input type="text" formControlName="nome" />
-  </label>
-  <br/>
-  
-  <label>
-    Email:
-    <input type="email" formControlName="email" />
-  </label>
-  <br/>
+    <form [formGroup]="clienteForm" (ngSubmit)="salvar()" class="space-y-4">
+      <!-- Nome -->
+      <div>
+        <label class="block text-gray-700 mb-1">Nome:</label>
+        <input 
+          type="text" 
+          formControlName="nome" 
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400"
+        />
+      </div>
 
-  <button type="submit">{{ isEditMode ? 'Atualizar' : 'Salvar' }}</button>
-  <button type="button" (click)="cancelar()">Cancelar</button>
+      <!-- Email -->
+      <div>
+        <label class="block text-gray-700 mb-1">Email:</label>
+        <input 
+          type="email" 
+          formControlName="email" 
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400"
+        />
+      </div>
 
-  <div *ngIf="mensagemSucesso" class="success">{{ mensagemSucesso }}</div>
-  <div *ngIf="mensagemErro" class="error">{{ mensagemErro }}</div>
+      <!-- Botões -->
+      <div class="flex justify-between mt-4">
+        <button 
+          type="submit" 
+          class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          {{ isEditMode ? 'Atualizar' : 'Salvar' }}
+        </button>
 
-</form>
+        <button 
+          type="button" 
+          (click)="cancelar()" 
+          class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Cancelar
+        </button>
+      </div>
+
+      <!-- Mensagens -->
+      <div *ngIf="mensagemSucesso" class="text-green-600 text-center mt-2 font-medium">
+        {{ mensagemSucesso }}
+      </div>
+      <div *ngIf="mensagemErro" class="text-red-600 text-center mt-2 font-medium">
+        {{ mensagemErro }}
+      </div>
+    </form>
+  </div>
+</div>
