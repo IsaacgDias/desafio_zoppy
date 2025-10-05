@@ -26,18 +26,18 @@ describe('ProdutosService', () => {
     service = module.get<ProdutosService>(ProdutosService);
   });
 
-  it('should be defined', () => {
+  it('deve estar definido', () => {
     expect(service).toBeDefined();
   });
 
   describe('findAll', () => {
-    it('should return paginated products', async () => {
+    it('deve retornar produtos paginados', async () => {
       const mockResult = { rows: [{ id: 1, nome: 'Produto A' }], count: 1 };
       mockProdutoModel.findAndCountAll.mockResolvedValue(mockResult);
 
-      const result = await service.findAll({ page: 1, limit: 10, search: 'a' });
+      const resultado = await service.findAll({ page: 1, limit: 10, search: 'a' });
 
-      expect(result).toEqual({
+      expect(resultado).toEqual({
         data: mockResult.rows,
         total: mockResult.count,
         page: 1,
@@ -48,34 +48,34 @@ describe('ProdutosService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a product by id', async () => {
-      const mockProduct = { id: 1, nome: 'Produto A' };
-      mockProdutoModel.findByPk.mockResolvedValue(mockProduct);
+    it('deve retornar um produto pelo id', async () => {
+      const mockProduto = { id: 1, nome: 'Produto A' };
+      mockProdutoModel.findByPk.mockResolvedValue(mockProduto);
 
-      const result = await service.findOne(1);
-      expect(result).toEqual(mockProduct);
+      const resultado = await service.findOne(1);
+      expect(resultado).toEqual(mockProduto);
       expect(mockProdutoModel.findByPk).toHaveBeenCalledWith(1);
     });
   });
 
   describe('create', () => {
-    it('should create a product', async () => {
-      const mockProduct = { id: 1, nome: 'Produto A' };
-      mockProdutoModel.create.mockResolvedValue(mockProduct);
+    it('deve criar um produto', async () => {
+      const mockProduto = { id: 1, nome: 'Produto A' };
+      mockProdutoModel.create.mockResolvedValue(mockProduto);
 
-      const result = await service.create({ nome: 'Produto A' });
-      expect(result).toEqual(mockProduct);
+      const resultado = await service.create({ nome: 'Produto A' });
+      expect(resultado).toEqual(mockProduto);
       expect(mockProdutoModel.create).toHaveBeenCalledWith({ nome: 'Produto A' });
     });
   });
 
   describe('update', () => {
-    it('should update a product', async () => {
+    it('deve atualizar um produto existente', async () => {
       const mockUpdateResult = [1, [{ id: 1, nome: 'Produto Atualizado' }]];
       mockProdutoModel.update.mockResolvedValue(mockUpdateResult);
 
-      const result = await service.update(1, { nome: 'Produto Atualizado' });
-      expect(result).toEqual(mockUpdateResult);
+      const resultado = await service.update(1, { nome: 'Produto Atualizado' });
+      expect(resultado).toEqual(mockUpdateResult);
       expect(mockProdutoModel.update).toHaveBeenCalledWith(
         { nome: 'Produto Atualizado' },
         { where: { id: 1 }, returning: true },
@@ -84,11 +84,11 @@ describe('ProdutosService', () => {
   });
 
   describe('remove', () => {
-    it('should delete a product', async () => {
+    it('deve deletar um produto pelo id', async () => {
       mockProdutoModel.destroy.mockResolvedValue(1);
 
-      const result = await service.remove(1);
-      expect(result).toBe(1);
+      const resultado = await service.remove(1);
+      expect(resultado).toBe(1);
       expect(mockProdutoModel.destroy).toHaveBeenCalledWith({ where: { id: 1 } });
     });
   });

@@ -45,24 +45,30 @@ export class ClientesService {
         };
     }
 
-    async findOne(id: number): Promise<Cliente | null> {
-        Cliente.belongsToMany(Produto, { through: 'cliente_produtos', as: 'produtos' });
-        Produto.belongsToMany(Cliente, { through: 'cliente_produtos', as: 'clientes' });
-        
-        return this.clienteModel.findByPk(id, { include: [Produto] });
+    async findOne(id: number): Promise<Cliente> {
+    const cliente = await this.clienteModel.findByPk(id, { include: [Produto] });
+    if (!cliente) throw new Error('Cliente não encontrado');
+    return cliente;
     }
+
 
     async create(data: Partial<Cliente>): Promise<Cliente> {
         return this.clienteModel.create(data as any);
     }
 
     async update(id: number, data: Partial<Cliente>): Promise<[number, Cliente[]]> {
-        return this.clienteModel.update(data, { where: { id }, returning: true });
+    const [count, rows] = await this.clienteModel.update(data, { where: { id }, returning: true });
+    if (count === 0) throw new Error('Cliente não encontrado');
+    return [count, rows];
     }
 
+
     async remove(id: number): Promise<number> {
-        return this.clienteModel.destroy({ where: { id } });
+    const deleted = await this.clienteModel.destroy({ where: { id } });
+    if (deleted === 0) throw new Error('Cliente não encontrado');
+    return deleted;
     }
+
     async vincularProduto(clienteId: number, produtoId: number) {
         const cliente = await this.clienteModel.findByPk(clienteId);
         const produto = await this.produtoModel.findByPk(produtoId);

@@ -24,12 +24,12 @@ describe('ClientesController', () => {
     controller = module.get<ClientesController>(ClientesController);
   });
 
-  it('should call findAll', async () => {
+  it('deve chamar o método findAll do serviço', async () => {
     await controller.findAll(1, 10, 'a');
     expect(service.findAll).toHaveBeenCalledWith({ page: 1, limit: 10, search: 'a' });
   });
 
-  it('should call findOne', async () => {
+  it('deve chamar o método findOne do serviço', async () => {
     await controller.findOne(1);
     expect(service.findOne).toHaveBeenCalledWith(1);
   });
