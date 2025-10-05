@@ -48,6 +48,7 @@ http://localhost:4200
 5. O banco de dados MySQL já estará pronto conforme configuração do docker-compose.yml:
 
 ## Instalação Localmente sem Docker
+
 ### Backend
 cd backend
 npm install
@@ -64,5 +65,23 @@ cd backend
 npm install
 npm run test       
 
+## Endpoints da API
+
+### Clientes
+- GET /clientes          → Listar todos os clientes
+- GET /clientes/:id      → Obter cliente por ID
+- POST /clientes         → Criar novo cliente
+- PUT /clientes/:id      → Atualizar cliente
+- DELETE /clientes/:id   → Deletar cliente
+
+### Produtos
+- GET /produtos
+- GET /produtos/:id
+- POST /produtos
+- PUT /produtos/:id
+- DELETE /produtos/:id
+
+### Relacionamento
+- POST /clientes/:id/produtos → Vincular produtos a um cliente
 
 
