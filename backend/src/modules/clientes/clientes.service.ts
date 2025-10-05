@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cliente } from '../../models/clientes.model';
 import { Produto } from '../../models/produtos.model';
+import { Sequelize } from 'sequelize-typescript';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ClientesService {
@@ -13,12 +15,40 @@ export class ClientesService {
         private produtoModel: typeof Produto
     ) {}
 
-    // Todos os clientes com produtos
-    async findAll(): Promise<Cliente[]> {
-        return this.clienteModel.findAll({ include: [Produto] });
+    // Retorna todos os clientes com paginação e filtro opcional
+    async findAll(options?: { page?: number; limit?: number; search?: string }) {
+        const page = options?.page ?? 1;
+        const limit = options?.limit ?? 10;
+        const search = options?.search ?? '';
+
+        const whereClause = search
+        ? {
+            [Op.or]: [
+                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('nome')), 'LIKE', `%${search.toLowerCase()}%`),
+                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), 'LIKE', `%${search.toLowerCase()}%`)
+            ]
+            }
+        : {};
+
+        const { rows, count } = await this.clienteModel.findAndCountAll({
+            where: whereClause,
+            limit,
+            offset: (page - 1) * limit,
+            order: [['id', 'ASC']],
+        });
+
+        return {
+            data: rows,
+            total: count,
+            page,
+            limit,
+        };
     }
 
     async findOne(id: number): Promise<Cliente | null> {
+        Cliente.belongsToMany(Produto, { through: 'cliente_produtos', as: 'produtos' });
+        Produto.belongsToMany(Cliente, { through: 'cliente_produtos', as: 'clientes' });
+        
         return this.clienteModel.findByPk(id, { include: [Produto] });
     }
 

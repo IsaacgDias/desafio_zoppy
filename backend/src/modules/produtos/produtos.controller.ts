@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
 import { Produto } from '../../models/produtos.model';
 
@@ -7,9 +7,13 @@ import { Produto } from '../../models/produtos.model';
 export class ProdutosController {
   constructor(private readonly produtosService: ProdutosService) {}
 
-  @Get() // Retorna todos os produtos
-  async findAll(): Promise<Produto[]> {
-    return this.produtosService.findAll();
+  @Get() // Retorna todos os produtos com paginação e filtro opcional
+  async findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string
+  ): Promise<{ data: Produto[]; total: number; page: number; limit: number }> {
+    return this.produtosService.findAll({ page: Number(page), limit: Number(limit), search });
   }
 
   @Get(':id') // Retorna produtos pelo ID

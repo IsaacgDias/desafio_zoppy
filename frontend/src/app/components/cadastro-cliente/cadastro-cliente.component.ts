@@ -39,12 +39,11 @@ export class CadastroClienteComponent implements OnInit {
     this.clienteId = clienteId;
 
     if (clienteId) {
-      // Carrega o cliente do backend usando Observable
       this.clienteService.obterClientes().subscribe({
-        next: (clientes) => {
-          const cliente = clientes.find(c => c.id === clienteId);
+        next: (res) => {
+          const cliente = res.data.find(c => c.id === clienteId);
           if (cliente) {
-            this.clienteForm.patchValue(cliente); // Preenche o formulário
+            this.clienteForm.patchValue(cliente);
           }
         },
         error: () => {
@@ -52,6 +51,7 @@ export class CadastroClienteComponent implements OnInit {
         }
       });
     }
+
   }
 
   salvar(): void {

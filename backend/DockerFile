@@ -1,22 +1,17 @@
-# Imagem base Node
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+RUN apk add --no-cache inotify-tools
 
-# Instala as dependências
+
+COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Copia todo o código do backend
-COPY . .
-
-# Copia o script que aguarda o MySQL
+# Espera o Mysql
 COPY wait-for-db.sh /wait-for-db.sh
 RUN chmod +x /wait-for-db.sh
 
 # Porta do NestJS
 EXPOSE 3000
-
-# Executa o script que aguarda o MySQL antes de iniciar o backend
-CMD ["/wait-for-db.sh"]
+CMD sh -c "/wait-for-db.sh && npm run start:dev -- --watch --poll=1000"

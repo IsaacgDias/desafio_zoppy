@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ClientesService, Cliente } from '../../services/clientes.service';
 import { ProdutosService, Produto } from '../../services/produtos.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vincular-produto',
@@ -31,14 +32,15 @@ export class VincularProdutoComponent implements OnInit {
   }
 
   carregarCliente() {
-    this.clienteService.obterClientes()
-      .subscribe(clientes => {
-        this.cliente = clientes.find(c => c.id === this.clienteId);
-      });
+    this.clienteService.obterClientes().subscribe(res => {
+      this.cliente = res.data.find(c => c.id === this.clienteId);
+    });
   }
 
   carregarProdutos() {
-    this.produtos$ = this.produtoService.obterProdutos();
+    this.produtos$ = this.produtoService.obterProdutos().pipe(
+      map(res => res.data) // pega apenas o array de produtos
+    );
   }
 
   vincularProduto(produtoId: number) {

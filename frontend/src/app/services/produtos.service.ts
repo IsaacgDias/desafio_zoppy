@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Produto {
@@ -10,16 +10,33 @@ export interface Produto {
   estoque: number;
 }
 
+export interface ProdutosResponse {
+  data: Produto[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProdutosService {
   private apiUrl = 'http://localhost:3000/produtos';
 
   constructor(private http: HttpClient) {}
 
-  obterProdutos(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl);
+  // Obter produtos com paginação e filtro opcional
+  obterProdutos(page: number = 1, limit: number = 10, search: string = ''): Observable<ProdutosResponse> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    return this.http.get<ProdutosResponse>(this.apiUrl, { params });
   }
 
   obterProdutoPorId(id: number): Observable<Produto> {

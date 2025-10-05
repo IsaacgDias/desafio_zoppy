@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
 import { Cliente } from '../../models/clientes.model';
 
@@ -7,9 +7,13 @@ import { Cliente } from '../../models/clientes.model';
 export class ClientesController {
     constructor(private readonly clientesService: ClientesService) {}
 
-    @Get() // Retorna todos os clientes
-    async findAll(): Promise<Cliente[]> {
-        return this.clientesService.findAll();
+    @Get() // Retorna todos os clientes com paginação e filtro opcional
+    async findAll(
+        @Query('page') page = 1,
+        @Query('limit') limit = 10,
+        @Query('search') search?: string
+    ): Promise<{ data: Cliente[]; total: number; page: number; limit: number }> {
+        return this.clientesService.findAll({ page: Number(page), limit: Number(limit), search });
     }
 
     @Get(':id') // Retorna clientes por ID

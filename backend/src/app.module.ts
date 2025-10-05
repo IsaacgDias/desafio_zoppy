@@ -9,7 +9,7 @@ import { ClientesModule } from './modules/clientes/clientes.module';
   imports: [
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: process.env.DB_HOST || 'localhost',   // <--- aqui
+      host: process.env.DB_HOST || 'localhost',
       port: Number(process.env.DB_PORT) || 3306,
       username: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || '1234', 
