@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ClientesService, Cliente } from '../../services/clientes.service';
-import { ProdutosService, Produto } from '../../services/produtos.service';
+import { ProdutosService, Produto, ProdutosResponse } from '../../services/produtos.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -16,7 +16,12 @@ import { map } from 'rxjs/operators';
 export class VincularProdutoComponent implements OnInit {
   clienteId!: number;
   cliente?: Cliente;
+
   produtos$!: Observable<Produto[]>;
+  totalProdutos = 0;
+  page = 1;
+  limit = 5;
+  searchTerm = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -31,18 +36,52 @@ export class VincularProdutoComponent implements OnInit {
     this.carregarProdutos();
   }
 
+  // Carrega dados do cliente
   carregarCliente() {
     this.clienteService.obterClientes().subscribe(res => {
       this.cliente = res.data.find(c => c.id === this.clienteId);
     });
   }
 
+  // Carrega produtos com paginação e filtro
   carregarProdutos() {
-    this.produtos$ = this.produtoService.obterProdutos().pipe(
-      map(res => res.data) // pega apenas o array de produtos
-    );
+    this.produtos$ = this.produtoService
+      .obterProdutos(this.page, this.limit, this.searchTerm)
+      .pipe(
+        map((res: ProdutosResponse) => {
+          this.totalProdutos = res.total;
+          return res.data;
+        })
+      );
   }
 
+  // Filtra produtos em tempo real
+  filtrarProdutos(filtro: string) {
+    this.searchTerm = filtro;
+    this.page = 1; // resetar para primeira página
+    this.carregarProdutos();
+  }
+
+  // Navegação entre páginas
+  proximaPagina() {
+    if (this.page * this.limit < this.totalProdutos) {
+      this.page++;
+      this.carregarProdutos();
+    }
+  }
+
+  paginaAnterior() {
+    if (this.page > 1) {
+      this.page--;
+      this.carregarProdutos();
+    }
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.totalProdutos / this.limit);
+  }
+
+  // Vincula produto ao cliente
   vincularProduto(produtoId: number) {
     this.clienteService.vincularProduto(this.clienteId, produtoId)
       .subscribe({

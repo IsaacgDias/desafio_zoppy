@@ -16,32 +16,29 @@ export class ClientesService {
     ) {}
 
     // Retorna todos os clientes com paginação e filtro opcional
-    async findAll(options?: { page?: number; limit?: number; search?: string }) {
-        const page = options?.page ?? 1;
-        const limit = options?.limit ?? 10;
-        const search = options?.search ?? '';
-
-        const whereClause = search
-        ? {
-            [Op.or]: [
-                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('nome')), 'LIKE', `%${search.toLowerCase()}%`),
-                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), 'LIKE', `%${search.toLowerCase()}%`)
-            ]
-            }
-        : {};
+    async findAll({ page = 1, limit = 10, search = '' }): Promise<{ data: Cliente[]; total: number; page: number; limit: number }> {
+        page = Number(page) || 1;
+        limit = Number(limit) || 10;
+        search = search ? `%${search}%` : '%';
+        const offset = (page - 1) * limit;
 
         const { rows, count } = await this.clienteModel.findAndCountAll({
-            where: whereClause,
+            where: { nome: { [Op.like]: search } },
             limit,
-            offset: (page - 1) * limit,
+            offset,
             order: [['id', 'ASC']],
+            include: [{
+                model: this.produtoModel,
+                attributes: ['nome'],
+                through: { attributes: [] },
+            }],
         });
 
         return {
             data: rows,
             total: count,
             page,
-            limit,
+            limit
         };
     }
 
